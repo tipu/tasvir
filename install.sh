@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-APP_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/linux-camera"
+APP_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/tasvir"
 BIN_DIR="$HOME/.local/bin"
 DESKTOP_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/applications"
 SRC_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 if [[ "${1:-}" == "--uninstall" ]]; then
-    rm -rf "$APP_DIR" "$BIN_DIR/linux-camera" "$DESKTOP_DIR/linux-camera.desktop"
-    echo "Removed Linux Camera. Your photos and videos stay in place."
+    rm -rf "$APP_DIR" "$BIN_DIR/tasvir" "$DESKTOP_DIR/tasvir.desktop"
+    echo "Removed Tasvir. Your photos and videos stay in place."
     exit 0
 fi
 
@@ -40,7 +40,7 @@ if [[ ! -x "$APP_DIR/venv/bin/python" ]]; then
 fi
 "$APP_DIR/venv/bin/python" -m pip install --quiet --upgrade pip
 "$APP_DIR/venv/bin/python" -m pip install --quiet -r "$SRC_DIR/requirements.txt"
-install -m 0644 "$SRC_DIR/linux_camera.py" "$APP_DIR/linux_camera.py"
+install -m 0644 "$SRC_DIR/tasvir.py" "$APP_DIR/tasvir.py"
 
 QT_DIR="$("$APP_DIR/venv/bin/python" -c 'import os, PySide6; print(os.path.dirname(PySide6.__file__))')"
 MISSING="$(ldd "$QT_DIR"/QtMultimedia*.so "$QT_DIR"/QtMultimediaWidgets*.so "$QT_DIR/Qt/plugins/multimedia/libffmpegmediaplugin.so" | awk '/not found/ {print $1}' | sort -u)"
@@ -57,18 +57,18 @@ for platform in xcb wayland; do
     fi
 done
 
-cat > "$BIN_DIR/linux-camera" <<LAUNCHER
+cat > "$BIN_DIR/tasvir" <<LAUNCHER
 #!/usr/bin/env bash
-exec "$APP_DIR/venv/bin/python" "$APP_DIR/linux_camera.py" "\$@"
+exec "$APP_DIR/venv/bin/python" "$APP_DIR/tasvir.py" "\$@"
 LAUNCHER
-chmod 0755 "$BIN_DIR/linux-camera"
+chmod 0755 "$BIN_DIR/tasvir"
 
-cat > "$DESKTOP_DIR/linux-camera.desktop" <<DESKTOP
+cat > "$DESKTOP_DIR/tasvir.desktop" <<DESKTOP
 [Desktop Entry]
 Type=Application
-Name=Linux Camera
+Name=Tasvir
 Comment=Switch cameras, take photos and record videos
-Exec=$BIN_DIR/linux-camera
+Exec=$BIN_DIR/tasvir
 Icon=camera-photo
 Terminal=false
 Categories=AudioVideo;Video;Recorder;
@@ -78,4 +78,4 @@ if command -v update-desktop-database >/dev/null; then
     update-desktop-database "$DESKTOP_DIR" >/dev/null 2>&1 || true
 fi
 
-echo "Installed. Start it from the application menu or run: $BIN_DIR/linux-camera"
+echo "Installed. Start it from the application menu or run: $BIN_DIR/tasvir"

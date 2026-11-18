@@ -14,7 +14,7 @@ from PySide6.QtWidgets import QApplication
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from linux_camera import MainWindow
+from tasvir import MainWindow
 
 
 MIN_VIDEO_BYTES = 50000
@@ -79,7 +79,7 @@ def main():
     parser.add_argument("--output", default="")
     parser.add_argument("--screenshot", default="")
     args, qt_args = parser.parse_known_args()
-    output = args.output or tempfile.mkdtemp(prefix="linux-camera-")
+    output = args.output or tempfile.mkdtemp(prefix="tasvir-")
     app = QApplication([sys.argv[0], *qt_args])
     window = MainWindow(output)
     window.show()

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Linux Camera: switch cameras, take photos and record videos to local folders."""
+"""Tasvir: switch cameras, take photos and record videos to local folders."""
 
 import argparse
 import sys
@@ -33,7 +33,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-APP_NAME = "LinuxCamera"
+APP_NAME = "Tasvir"
 NO_FRAME_TIMEOUT_MS = 4000
 POST_RECORD_REFRESH_MS = 1000
 NO_AUDIO = "none"
@@ -206,7 +206,7 @@ class MainWindow(QMainWindow):
     def __init__(self, output_root=None, camera_filter=""):
         super().__init__()
         self.camera_filter = camera_filter
-        self.setWindowTitle("Linux Camera")
+        self.setWindowTitle("Tasvir")
         self.resize(1100, 760)
         self.devices = QMediaDevices(self)
         self.controller = CameraController(output_root)
@@ -526,17 +526,17 @@ def main():
     parser = argparse.ArgumentParser(description="Switch cameras, take photos and record videos.")
     parser.add_argument("--selftest", action="store_true", help="capture a photo and a video from each camera, then exit")
     parser.add_argument("--camera", default="", help="camera name substring or device id to start with (selftest: cameras to test)")
-    parser.add_argument("--output", help="save photos and videos to this folder instead of ~/Pictures/LinuxCamera and ~/Videos/LinuxCamera")
+    parser.add_argument("--output", help="save photos and videos to this folder instead of ~/Pictures/Tasvir and ~/Videos/Tasvir")
     parser.add_argument("--seconds", type=int, default=3, help="selftest only: video length")
     args, qt_args = parser.parse_known_args()
     app = QApplication([sys.argv[0], *qt_args])
     app.setApplicationName(APP_NAME)
-    app.setDesktopFileName("linux-camera")
+    app.setDesktopFileName("tasvir")
     probe = CameraController()
     if not probe.recorder.isAvailable():
         print(BACKEND_MISSING, file=sys.stderr)
         if not args.selftest:
-            QMessageBox.critical(None, "Linux Camera", BACKEND_MISSING)
+            QMessageBox.critical(None, "Tasvir", BACKEND_MISSING)
         return 1
     if args.selftest:
         return run_selftest(args.camera, args.seconds, args.output)
